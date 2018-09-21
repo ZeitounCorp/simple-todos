@@ -1,34 +1,109 @@
-import React, { Component } from 'react';
-
+import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 import Task from './Task.js';
+import {withTracker} from 'meteor/react-meteor-data';
+import AccountsUIWrapper from './AccountsUIWrapper.js';
 
-// App component - represents the whole app
-export default class App extends Component {
-  getTasks() {
-    return [
-      { _id: 1, text: 'This is task 1' },
-      { _id: 2, text: 'This is task 2' },
-      { _id: 3, text: 'This is task 3' },
-    ];
-  }
+import { Meteor } from 'meteor/meteor';
+import {Tasks} from '../api/task.js';
 
-  renderTasks() {
-    return this.getTasks().map((task) => (
-      <Task key={task._id} task={task} />
-    ));
-  }
 
-  render() {
-    return (
-      <div className="container">
-        <header>
-          <h1>Todo List</h1>
-        </header>
+class App extends Component {
+    constructor(props) {
+        super(props);
 
-        <ul>
-          {this.renderTasks()}
-        </ul>
-      </div>
-    );
-  }
+        this.state = {
+            hideCompleted: false,
+        };
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+        const task = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
+
+        Tasks.insert({
+            task,
+            createdAt: new Date(),
+            owner: Meteor.userId(),
+            username: Meteor.user().username,
+        });
+
+        Meteor.call('tasks.insert', task);
+
+        ReactDOM.findDOMNode(this.refs.textInput).value = '';
+    }
+
+    toggleHideCompleted() {
+        this.setState({
+            hideCompleted: !this.state.hideCompleted,
+        });
+    }
+
+
+    renderTasks() {
+        let filteredTasks = this.props.tasks;
+        if (this.state.hideCompleted) {
+            filteredTasks = filteredTasks.filter(task => !task.checked);
+        }
+        return filteredTasks.map((task) => {
+            const currentUserId = this.props.currentUser && this.props.currentUser._id;
+            const showPrivateButton = task.owner === currentUserId;
+
+            return (
+                <Task
+                    key={task._id}
+                    task={task}
+                    showPrivateButton={showPrivateButton}
+                />
+            );
+        });
+    }
+
+    render() {
+        return (
+            <div className="container">
+                <header>
+                    <h1>Todo List ({this.props.incompleteCount})</h1>
+
+
+                    <label className="hide-completed">
+                        <input
+                            type="checkbox"
+                            readOnly
+                            checked={this.state.hideCompleted}
+                            onClick={this.toggleHideCompleted.bind(this)}
+                        />
+                        Hide Completed Tasks
+                    </label>
+
+                    <AccountsUIWrapper />
+
+                    { this.props.currentUser ?
+                        <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
+                            <input
+                                type="text"
+                                ref="textInput"
+                                placeholder="Type to add new tasks"
+                            />
+                        </form> : ''
+                    }
+                </header>
+
+                <ul>
+                    {this.renderTasks()}
+                </ul>
+            </div>
+        );
+    }
 }
+
+export default withTracker(() => {
+
+    Meteor.subscribe('tasks');
+
+    return {
+        tasks: Tasks.find({}, { sort: { createdAt: -1 } }).fetch(),
+        incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
+        currentUser: Meteor.user(),
+    };
+})(App);

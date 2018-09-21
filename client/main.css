@@ -1,4 +1,125 @@
 body {
-  padding: 10px;
-  font-family: sans-serif;
+  font-family: Helvetica, serif;
+  color: #eeeeee;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+  background-color: #fc00ff;
+
+}
+
+div{
+  background-image: -webkit-linear-gradient(to bottom, #00dbde, #fc00ff);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background-image: linear-gradient(to bottom, #00dbde, #fc00ff);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  /*filter: blur(10px);*/
+  /*-webkit-filter: blur(10px);*/
+}
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  min-height: 100%;
+  overflow: hidden;
+  opacity: 1;
+}
+header {
+  font-family: "American Typewriter", sans-serif;
+  font-weight: lighter;
+  border-bottom: 5px solid #eeeeee;
+  padding: 20px 15px 15px 15px;
+  font-size: 48px;
+  position: relative;
+  background: transparent;
+}
+#login-buttons {
+  display: block;
+  background: #eeeeee;
+}
+h1 {
+  font-size: 1.5em;
+  display: inline-block;
+  margin: 0 1em 10px 0;
+}
+form {
+  margin-top: 10px;
+  margin-bottom: -10px;
+  position: relative;
+}
+
+new-task {
+  background: #eeeeee;
+}
+.new-task input {
+  box-sizing: border-box;
+  background: transparent;
+  border: none;
+  width: 100%;
+  padding: 10px 80px 10px 0;
+  font-size: 48px;
+}
+.new-task input:focus{
+  outline: 0;
+}
+ul {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+.delete {
+  float: right;
+  font-weight: bold;
+  background: none;
+  font-size: 30px;
+  border: none;
+  color: #ff0025;
+  position: relative;
+}
+li {
+  position: relative;
+  font-family: "American Typewriter", serif;
+  border-bottom: 5px solid #eeeeee;
+  font-size: 30px;
+  list-style: none;
+  padding: 15px;
+}
+
+li .text {
+  margin-left: 10px;
+  color: #e7b3bc;
+}
+li.checked {
+  color: #4cd018 !important;
+}
+li.checked .text {
+  text-decoration: line-through;
+  color: #54e81a !important;
+}
+li.private {
+  background: #eee;
+  border-color: #ddd;
+}
+header .hide-completed {
+  float: right;
+  font-size: 30px;
+}
+.toggle-private {
+  margin-left: 5px;
+}
+@media (max-width: 600px) {
+  li {
+    padding: 12px 15px;
+  }
+  .search {
+    width: 150px;
+    clear: both;
+  }
+  .new-task input {
+    padding-bottom: 5px;
+  }
 }
