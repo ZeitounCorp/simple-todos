@@ -5,7 +5,6 @@ import { check } from 'meteor/check';
 export const Notes = new Mongo.Collection('notes');
 
 
-
 Meteor.methods ({
   'notes.insert'(text){
     check(text, String);
