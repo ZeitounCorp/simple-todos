@@ -1,2 +1,2 @@
 # simple-todos
-## Working on a simple project to understand meteor.js
+## Basic simple todos' app as introduction to meteor.js
